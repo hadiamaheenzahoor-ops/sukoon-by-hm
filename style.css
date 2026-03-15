@@ -19,7 +19,7 @@
   --text-dim:    #9ca3af;
   --radius:      16px;
   --radius-sm:   10px;
-  --sidebar-w:   240px;
+  --sidebar-w:   260px;
   --transition:  0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -77,6 +77,7 @@ body {
   position: relative;
   z-index: 1;
   display: flex;
+  flex-direction: row;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -229,7 +230,6 @@ body {
   flex-direction: column;
   overflow: hidden;
   min-width: 0;
-  max-width: calc(100vw - var(--sidebar-w));
 }
 
 /* Mobile bar */
@@ -702,7 +702,6 @@ textarea::-webkit-scrollbar { width: 3px; }
 ══════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Sidebar hidden by default on mobile */
   .sidebar {
     position: fixed;
     top: 0; left: 0; bottom: 0;
@@ -722,40 +721,36 @@ textarea::-webkit-scrollbar { width: 3px; }
     z-index: 199;
   }
 
-  /* Mobile top bar show karo */
   .mobile-bar {
     display: flex;
   }
 
-  /* Main full width le le */
   .main {
     width: 100vw !important;
     max-width: 100vw !important;
-    min-width: 0 !important;
-  }
-
-  /* App wrapper fix */
-  .app-wrapper {
-    flex-direction: column;
+    flex: 1;
   }
 
   .chat-area {
     padding: 16px 12px;
-    flex: 1;
-    overflow-y: auto;
   }
 
   .input-zone {
-    padding: 8px 12px 16px;
+    padding: 8px 12px 20px;
     width: 100%;
   }
 
   .input-box {
     max-width: 100%;
+    width: 100%;
+  }
+
+  textarea {
+    font-size: 16px;
   }
 
   .welcome {
-    min-height: 60vh;
+    min-height: 55vh;
     padding: 20px 16px;
   }
 
@@ -764,12 +759,19 @@ textarea::-webkit-scrollbar { width: 3px; }
   .welcome-ayat { padding: 14px 16px; }
   .arabic { font-size: 17px; }
 
-  .msg-group {
-    max-width: 100%;
-  }
+  .msg-group { max-width: 100%; }
 
   .bubble {
     font-size: 13px;
     padding: 12px 14px;
+  }
+
+  .quick-starts {
+    gap: 6px;
+  }
+
+  .qs-btn {
+    font-size: 12px;
+    padding: 8px 14px;
   }
 }
