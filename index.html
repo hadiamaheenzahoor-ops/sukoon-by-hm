@@ -580,6 +580,143 @@ textarea::placeholder { color: var(--text-muted); }
   .msgs { max-width: 100%; }
   .bubble { font-size: 13px; padding: 11px 13px; }
 }
+.share-btn {
+  background: var(--gold-dim);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--gold);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.share-btn:hover { background: rgba(201,169,110,0.2); }
+
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--gold-light);
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.share-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  align-items: flex-end;
+  justify-content: center;
+}
+.share-modal.open { display: flex; }
+
+.share-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+
+.share-box {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 32px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.share-box h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+  text-align: center;
+}
+.share-box p { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
+
+.share-link-box {
+  display: flex;
+  gap: 8px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.share-link-box span { flex: 1; font-size: 12px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.share-copy-btn {
+  background: var(--gold-dim);
+  border: 1px solid var(--border-gold);
+  border-radius: 7px;
+  padding: 6px 14px;
+  color: var(--gold);
+  font-size: 12px;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.share-copy-btn:hover { background: rgba(201,169,110,0.2); }
+
+.share-options { display: flex; gap: 10px; justify-content: center; }
+
+.share-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: 'Outfit', sans-serif;
+}
+.share-opt:hover { border-color: var(--border-gold); color: var(--gold-light); }
+.share-opt span { font-size: 22px; }
+
+.share-close {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.share-close:hover { border-color: var(--border-gold); color: var(--text); }
 </style>
 </head>
 <body>
@@ -643,7 +780,9 @@ textarea::placeholder { color: var(--text-muted); }
         <span></span><span></span><span></span>
       </button>
       <div class="topbar-brand">Sukoon <small>by HM</small></div>
-      <div style="width:30px"></div>
+      <button class="share-btn" onclick="shareApp()" title="Share">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
     </div>
 
     <!-- Chat area -->
@@ -688,8 +827,39 @@ textarea::placeholder { color: var(--text-muted); }
   </main>
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast">🔗 Link copied!</div>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal">
+  <div class="share-backdrop" onclick="closeShare()"></div>
+  <div class="share-box">
+    <h3>🌙 Share Sukoon</h3>
+    <p>Share this app with someone who needs it</p>
+    <div class="share-link-box">
+      <span id="shareUrl"></span>
+      <button class="share-copy-btn" onclick="copyLink()">Copy</button>
+    </div>
+    <div class="share-options">
+      <div class="share-opt" onclick="shareWhatsApp()">
+        <span>💬</span>
+        WhatsApp
+      </div>
+      <div class="share-opt" onclick="copyLink()">
+        <span>🔗</span>
+        Copy Link
+      </div>
+      <div class="share-opt" onclick="shareNative()">
+        <span>📤</span>
+        More
+      </div>
+    </div>
+    <button class="share-close" onclick="closeShare()">Cancel</button>
+  </div>
+</div>
+
 <script>
-const API_KEY = "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";
+const API_KEY = "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";
 
 const SYSTEM = `You are "Sukoon by HM" — a warm, compassionate Islamic AI assistant designed to bring peace and comfort to people going through difficult times.
 
@@ -899,6 +1069,53 @@ function showTyping() {
 function removeTyping() {
   const t = document.getElementById('typing');
   if (t) t.remove();
+}
+
+// ── SHARE ──
+function shareApp() {
+  const url = window.location.href;
+  document.getElementById('shareUrl').textContent = url;
+  document.getElementById('shareModal').classList.add('open');
+}
+
+function closeShare() {
+  document.getElementById('shareModal').classList.remove('open');
+}
+
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('🔗 Link copied!');
+    closeShare();
+  });
+}
+
+function shareWhatsApp() {
+  const url = window.location.href;
+  const msg = `🌙 *Sukoon by HM* — Find peace through Quran & Sunnah\n\n${url}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+  closeShare();
+}
+
+function shareNative() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: 'Sukoon by HM',
+      text: '🌙 Find peace through Quran & Sunnah',
+      url: url
+    });
+    closeShare();
+  } else {
+    copyLink();
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 </script>
 </body>
