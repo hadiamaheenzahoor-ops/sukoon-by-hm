@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sukoon — by HM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Geometric background pattern -->
+<div class="bg-pattern"></div>
+<div class="bg-glow"></div>
+
+<div class="app-wrapper">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+
+      <div class="brand">
+        <div class="brand-icon">☽</div>
+        <div class="brand-text">
+          <span class="brand-name">Sukoon</span>
+          <span class="brand-by">by HM</span>
+        </div>
+      </div>
+
+      <button class="new-chat-btn" onclick="newChat()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Conversation
+      </button>
+
+      <div class="sidebar-label">What's on your heart?</div>
+
+      <div class="topics-list" id="topicsList">
+        <div class="topic-item" onclick="useTopic('Dua for Anxiety')">🤲 Dua for Anxiety</div>
+        <div class="topic-item" onclick="useTopic('Feeling Lonely')">😔 Feeling Lonely</div>
+        <div class="topic-item" onclick="useTopic('Exam Stress')">📚 Exam Stress</div>
+        <div class="topic-item" onclick="useTopic('Heartbreak & Grief')">💔 Heartbreak & Grief</div>
+        <div class="topic-item" onclick="useTopic('Anger Management')">😠 Anger Management</div>
+        <div class="topic-item" onclick="useTopic('Family Problems')">👨‍👩‍👧 Family Problems</div>
+        <div class="topic-item" onclick="useTopic('Financial Stress')">💸 Financial Stress</div>
+        <div class="topic-item" onclick="useTopic('Can\'t Sleep')">😴 Can't Sleep</div>
+        <div class="topic-item" onclick="useTopic('Feeling Hopeless')">🌧️ Feeling Hopeless</div>
+        <div class="topic-item" onclick="useTopic('Illness & Pain')">🤒 Illness & Pain</div>
+        <div class="topic-item" onclick="useTopic('Gratitude')">🙏 Gratitude</div>
+        <div class="topic-item" onclick="useTopic('General Anxiety')">⚡ General Anxiety</div>
+        <div class="topic-item" onclick="useTopic('Weak Imaan')">🕌 Weak Imaan</div>
+        <div class="topic-item" onclick="useTopic('Guilt & Repentance')">😞 Guilt & Repentance</div>
+        <div class="topic-item" onclick="useTopic('Evil Eye Protection')">👁️ Evil Eye Protection</div>
+        <div class="topic-item" onclick="useTopic('Worry About Rizq')">🌿 Worry About Rizq</div>
+        <div class="topic-item" onclick="useTopic('Need Courage')">💪 Need Courage</div>
+        <div class="topic-item" onclick="useTopic('Feeling Misunderstood')">🫂 Feeling Misunderstood</div>
+        <div class="topic-item" onclick="useTopic('Fresh Start')">🌅 Fresh Start</div>
+        <div class="topic-item" onclick="useTopic('Tasbeeh & Zikr')">📿 Tasbeeh & Zikr</div>
+        <div class="topic-item" onclick="useTopic('Night Anxiety')">🌙 Night Anxiety</div>
+        <div class="topic-item" onclick="useTopic('Self Worth in Islam')">🤍 Self Worth in Islam</div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <!-- Mobile top bar -->
+    <div class="mobile-bar">
+      <button class="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="mobile-brand">Sukoon <span>by HM</span></div>
+      <div style="width:36px"></div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="chat-area" id="chatArea">
+
+      <!-- Welcome screen -->
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-moon">☽</div>
+        <h1 class="welcome-title">
+          <em>Find your</em> Sukoon
+        </h1>
+        <p class="welcome-sub">
+          Share what's on your heart — receive guidance from the Quran and Sunnah, with warmth and care.
+        </p>
+        <div class="welcome-ayat">
+          <span class="arabic">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</span>
+          <span class="ayat-trans">"Verily, in the remembrance of Allah do hearts find rest." — Surah Ar-Ra'd 13:28</span>
+        </div>
+        <div class="quick-starts">
+          <button class="qs-btn" onclick="useTopic('Feeling Hopeless')">I feel hopeless</button>
+          <button class="qs-btn" onclick="useTopic('Exam Stress')">Exam stress</button>
+          <button class="qs-btn" onclick="useTopic('Can\'t Sleep')">Can't sleep</button>
+          <button class="qs-btn" onclick="useTopic('Weak Imaan')">Weak Imaan</button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div id="messages"></div>
+
+    </div>
+
+    <!-- Input area -->
+    <div class="input-zone">
+      <div class="input-box">
+        <textarea
+          id="userInput"
+          placeholder="Share what's on your heart..."
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="input-footer">Sukoon by HM · Guided by Quran & Sunnah</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
